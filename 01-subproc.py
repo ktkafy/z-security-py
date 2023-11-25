@@ -1,2 +1,4 @@
 import subprocess
-subprocess.call("calc.exe",shell=True)
+interface = "eth0"
+print("[+]changing interface {}".format(interface))
+#subprocess.call("calc.exe",shell=True)
