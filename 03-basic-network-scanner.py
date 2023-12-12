@@ -33,4 +33,4 @@ def scan_2_send_2_boradcast_mac(ip):
    
 
 #scan("10.0.2.1/24")
-scan_2_send_2_boradcast_mac("192.168.1.0/24")
+scan_2_send_2_boradcast_mac("10.0.2.0/24")
