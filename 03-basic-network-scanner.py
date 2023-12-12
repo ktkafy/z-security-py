@@ -22,8 +22,16 @@ def scan_2_send_2_boradcast_mac(ip):
     arp_request_broadcast = broadcast/arp_request
     
     #send and receive packets with modified Ether layer so we use scapy.srp()
-    answered, unaswered = scapy.srp(arp_request_broadcast, timeout=1)
-    print(answered.summary())
+    #the function gives us two lists as answered and unaswered response
+    #answered, unaswered = scapy.srp(arp_request_broadcast, timeout=1)
+    answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0] #getting only first response list
+    #print(answered_list.summary())
+    
+    print("IP\t\t\tMAC Address\n------------------------------------------")
+    
+    for element in answered_list:
+        print(element[1].psrc + "\t\t" + element[1].hwsrc)
+        print("------------------------------------------")
     
     #print(arp_request_broadcast.summary()) #show summary of our packet
     #arp_request_broadcast.show() #show details about out packet
